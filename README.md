@@ -114,6 +114,9 @@ You can generate all in a choice group (as the above example shows) or you can g
 ### command
 ```bash
 $ python xsd2xml.py -s 1.xsd -e root -c | xmllint --format -
+
+# or with bat for xml highlight
+$ python xsd2xml.py -s 1.xsd -e root -c | xmllint --format -| bat -pP
 ```
 ### xml
 ```xml
