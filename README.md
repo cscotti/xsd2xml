@@ -94,7 +94,10 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
 ```
 The command to get the above xml:  
 ```bash
-$ python xsd2xml.py -s 1.xsd -e root | xmllint --format -
+$ python xsd2xml.py -s test.xsd -e operatorset | xmllint --format -
+
+# or with bat for xml highlight
+$ python3 xsd2xml.py -s test.xsd -e operatorset -c | xmllint --format -| bat -pP
 ```
 ## Usage
 ```bash
@@ -114,9 +117,6 @@ You can generate all in a choice group (as the above example shows) or you can g
 ### command
 ```bash
 $ python3 xsd2xml.py -s test.xsd -e operatorset -c | xmllint --format -
-
-# or with bat for xml highlight
-$ python3 xsd2xml.py -s test.xsd -e operatorset -c | xmllint --format -| bat -pP
 ```
 ### xml
 ```xml
