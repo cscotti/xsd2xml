@@ -212,7 +212,7 @@ class GenXML:
                     node1 = node.type.content
                     n = self.use_short_ns(node1.name)
                     tp = str(node1.name)
-                    # print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
+                    print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
                     
         elif isinstance(node.type, XsdAtomicBuiltin):
             n = self.use_short_ns(node.name)
@@ -229,9 +229,9 @@ class GenXML:
                 print('<!--default: using the 1st type-->')
                 tp = str(node.type.member_types[0].base_type)
                 print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
-            # else:
-            #     tp = str(node.type.base_type)
-            #     print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
+            else:
+                tp = str(node.type.base_type)
+                print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
         else:
             print('ERROR: unknown type: ' + node.type)
     
@@ -240,19 +240,7 @@ class GenXML:
     def run(self):
         valsmap(self.vals)
         self.print_header()
-
         self.node2xml(self.xsd.elements[self.elem])
-        # without_ns_elem=self.xsd.elements[self.elem]
-        # # remove namespace
-        # if hasattr(without_ns_elem.tag, 'find'):
-        #     # remove namespace
-        #     i = without_ns_elem.tag.find('}')
-        #     if i >= 0:
-        #         without_ns_elem.tag = without_ns_elem.tag[i+1:]
-        #         self.node2xml(self.xsd.elements[without_ns_elem])
-        # else:
-        #     self.node2xml(self.xsd.elements[self.elem])
-
 
 
 ##############
