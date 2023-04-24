@@ -20,7 +20,6 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
       <xs:element name="sku" type="SKU"/>
       <xs:element name="ppk" type="xs:integer"/>
       <xs:element name="alo" type="xs:date"/>
-      <xs:any minOccurs="0"/>
       <xs:element name="shoesize">
         <xs:complexType>
           <xs:simpleContent>
