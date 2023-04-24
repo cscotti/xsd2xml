@@ -99,7 +99,7 @@ class GenXML:
             if short_ns =='':
                 temp= name[x + 1:]
             else:
-                temp= + ":" + name[x + 1:]
+                temp= short_ns + ":" + name[x + 1:]
             return temp
         return name
     
