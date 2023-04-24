@@ -17,7 +17,7 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
         <xs:element name="name" type="xs:string"/>
         <xs:element name="age" type="xs:unsignedByte"/>
       </xs:sequence>
-      <xs:element name="sku" type="SKU"/>
+      <xs:element name="sku" type="simpleType.SKU"/>
       <xs:element name="ppk" type="xs:integer"/>
       <xs:element name="alo" type="xs:date"/>
       <xs:element name="shoesize">
@@ -37,7 +37,7 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
       <xs:element name="intvalues" type="valuelist"/>
     </xs:choice>
   </xs:complexType>
-  <xs:simpleType name="SKU">
+  <xs:simpleType name="simpleType.SKU">
     <xs:restriction base="xs:string">
       <xs:pattern value="\d{3}\w{3}"/>
     </xs:restriction>
@@ -65,7 +65,7 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
 <!--complex content-->
 <root xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <!--START:[choice]-->
-  <!--next 9 items are in a [choice] group-->
+  <!--next 8 items are in a [choice] group-->
   <!--START:[sequence]-->
   <!--next 2 items are in a [sequence] group-->
   <empno>lol</empno>
@@ -76,13 +76,11 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
   <name>lol</name>
   <age>17</age>
   <!--END:[sequence]-->
-  <sku>lol</sku>
+  <sku>test-sku</sku>
   <ppk>-176</ppk>
   <alo>2004-04-12</alo>
-  <!--next 1 item is optional (minOcuurs = 0)-->
-  <_ANY_/>
-  <!--simple content-->
-  <shoesize>-176</shoesize>
+  <!--complex content-->
+  <xs:integer>-176</xs:integer>
   <!--simpletype: union.-->
   <!--default: using the 1st type-->
   <jeans_size>+3</jeans_size>
