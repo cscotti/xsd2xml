@@ -6,8 +6,8 @@ This is a simple python3 script to help you generate some xmls if you have a xsd
 ```xsd
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="root" type="root"/>
-  <xs:complexType name="root">
+  <xs:element name="root" type="complexType.root"/>
+  <xs:complexType name="complexType.root">
     <xs:choice>
       <xs:sequence>
         <xs:element name="empno" type="xs:string"/>
