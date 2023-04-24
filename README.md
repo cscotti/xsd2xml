@@ -113,10 +113,10 @@ optional arguments:
 You can generate all in a choice group (as the above example shows) or you can generate the 1st element in the choice group by the "-c" option.
 ### command
 ```bash
-$ python xsd2xml.py -s 1.xsd -e root -c | xmllint --format -
+$ python3 xsd2xml.py -s test.xsd -e operatorset -c | xmllint --format -
 
 # or with bat for xml highlight
-$ python xsd2xml.py -s 1.xsd -e root -c | xmllint --format -| bat -pP
+$ python3 xsd2xml.py -s test.xsd -e operatorset -c | xmllint --format -| bat -pP
 ```
 ### xml
 ```xml
