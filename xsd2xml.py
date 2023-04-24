@@ -1,15 +1,21 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3.10
+
+# pip3 install xmlschema
 
 from argparse import ArgumentParser
 import xmlschema
-from xmlschema.components import (
+from xmlschema import (
     XsdElement,
+)
+
+from xmlschema.validators import (
     XsdAnyElement,
     XsdComplexType,
     XsdAtomicBuiltin,
     XsdSimpleType,
     XsdList,
-    XsdUnion
+    XsdUnion,
+    XsdGroup
 )
 
 # sample data is hardcoded
@@ -76,7 +82,7 @@ class GenXML:
     
     # shorten the namespace
     def short_ns(self, ns):
-        for k, v in self.xsd.namespaces.iteritems():
+        for k, v in self.xsd.namespaces.items():
             if k == '':
                 continue
             if v == ns:
@@ -89,7 +95,12 @@ class GenXML:
         if name[0] == '{':
             x = name.find('}')
             ns = name[1:x]
-            return self.short_ns(ns) + ":" + name[x + 1:]
+            short_ns=self.short_ns(ns)
+            if short_ns =='':
+                temp= name[x + 1:]
+            else:
+                temp= + ":" + name[x + 1:]
+            return temp
         return name
     
     
@@ -102,14 +113,15 @@ class GenXML:
 
     # header of xml doc
     def print_header(self):
-        print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+        print("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
 
     
     # put all defined namespaces as a string
     def ns_map_str(self):
         ns_all = ''
-        for k, v in self.xsd.namespaces.iteritems():
+        for k, v in self.xsd.namespaces.items():
             if k == '':
+                self.element_xmlns=v
                 continue
             else:
                 ns_all += 'xmlns:' + k + '=\"' + v + '\"' + ' '
@@ -121,7 +133,11 @@ class GenXML:
         x = '<' + name
         if self.root:
             self.root = False
-            x += ' ' + self.ns_map_str()
+            ns_list=self.ns_map_str()
+            if self.element_xmlns:
+                x += " xmlns=\""+ self.element_xmlns + "\""
+            else:
+                x += ' ' + ns_list
         x += '>'
         return x
 
@@ -146,14 +162,14 @@ class GenXML:
         nextg = g._group
         y = len(nextg)
         if y == 0:
-            print '<!--empty-->'
+            print('<!--empty-->')
             return
     
-        print '<!--START:[' + model + ']-->'
+        print('<!--START:[' + model + ']-->')
         if self.enable_choice and model == 'choice':
-            print '<!--next item is from a [choice] group with size=' + str(y) + '-->'
+            print('<!--next item is from a [choice] group with size=' + str(y) + '-->')
         else:
-            print '<!--next ' + str(y) + ' items are in a [' + model + '] group-->'
+            print('<!--next ' + str(y) + ' items are in a [' + model + '] group-->')
             
         for ng in nextg:
             if isinstance(ng, XsdElement):
@@ -165,75 +181,101 @@ class GenXML:
         
             if self.enable_choice and model == 'choice':
                 break
-        print '<!--END:[' + model + ']-->' 
+        print('<!--END:[' + model + ']-->')
     
     
     # print a node
     def node2xml(self, node):
-        if node.min_occurs == 0:
-            print '<!--next 1 item is optional (minOcuurs = 0)-->'
-        if node.max_occurs >  1:
-            print '<!--next 1 item is multiple (maxOccurs > 1)-->'
+        if hasattr(node, "minOccurs") and node.minOccurs == 0:
+            print('<!--next 1 item is optional (minOcuurs = 0)-->')
+        if hasattr(node, "maxOccurs") and node.maxOccurs >  1:
+            print('<!--next 1 item is multiple (maxOccurs > 1)-->')
         
         if isinstance(node, XsdAnyElement):
-            print '<_ANY_/>'
+            print('<_ANY_/>')
             return
 
         if isinstance(node.type, XsdComplexType):
             n = self.use_short_ns(node.name)
             if node.type.is_simple():
-                print '<!--simple content-->'
-                tp = str(node.type.content_type)
-                print self.start_tag(n) + self.genval(tp) + self.end_tag(n)
+                print('<!--simple content-->')
+                tp = str(node.type.content)
+                print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
             else:
-                print '<!--complex content-->'
-                print self.start_tag(n)
-                self.group2xml(node.type.content_type)
-                print self.end_tag(n)
+                print('<!--complex content-->')
+                if isinstance(node.type.content, XsdGroup):
+                    print(self.start_tag(n))
+                    self.group2xml(node.type.content)
+                    print(self.end_tag(n))
+                else:
+                    # XsdAtomicBuiltin
+                    node1 = node.type.content
+                    n = self.use_short_ns(node1.name)
+                    tp = str(node1.name)
+                    # print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
+                    
         elif isinstance(node.type, XsdAtomicBuiltin):
             n = self.use_short_ns(node.name)
             tp = str(node.type)
-            print self.start_tag(n) + self.genval(tp) + self.end_tag(n)
+            print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
         elif isinstance(node.type, XsdSimpleType):
             n = self.use_short_ns(node.name)
             if isinstance(node.type, XsdList):
-                print '<!--simpletype: list-->'
+                print('<!--simpletype: list-->')
                 tp = str(node.type.item_type)
-                print self.start_tag(n) + self.genval(tp) + self.end_tag(n)
+                print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
             elif isinstance(node.type, XsdUnion):
-                print '<!--simpletype: union.-->'
-                print '<!--default: using the 1st type-->'
+                print('<!--simpletype: union.-->')
+                print('<!--default: using the 1st type-->')
                 tp = str(node.type.member_types[0].base_type)
-                print self.start_tag(n) + self.genval(tp) + self.end_tag(n)
-            else:
-                tp = str(node.type.base_type)
-                print self.start_tag(n) + self.genval(tp) + self.end_tag(n)
+                print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
+            # else:
+            #     tp = str(node.type.base_type)
+            #     print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
         else:
-            print 'ERROR: unknown type: ' + node.type
+            print('ERROR: unknown type: ' + node.type)
     
     
     # setup and print everything
     def run(self):
         valsmap(self.vals)
         self.print_header()
+
         self.node2xml(self.xsd.elements[self.elem])
+        # without_ns_elem=self.xsd.elements[self.elem]
+        # # remove namespace
+        # if hasattr(without_ns_elem.tag, 'find'):
+        #     # remove namespace
+        #     i = without_ns_elem.tag.find('}')
+        #     if i >= 0:
+        #         without_ns_elem.tag = without_ns_elem.tag[i+1:]
+        #         self.node2xml(self.xsd.elements[without_ns_elem])
+        # else:
+        #     self.node2xml(self.xsd.elements[self.elem])
+
 
 
 ##############
 
 
 def main():
-    parser = ArgumentParser()
-    parser.add_argument("-s", "--schema", dest="xsdfile", required=True, 
-                        help="select the xsd used to generate xml")
-    parser.add_argument("-e", "--element", dest="element", required=True,
-                        help="select an element to dump xml")
-    parser.add_argument("-c", "--choice",
-                        action="store_true", dest="enable_choice", default=False,
-                        help="enable the <choice> mode")
-    args = parser.parse_args()
+    DEBUG=False
+    if DEBUG ==True:
+      
+        generator = GenXML("test.xsd", "root", False)
+    else:
 
-    generator = GenXML(args.xsdfile, args.element, args.enable_choice)
+        parser = ArgumentParser()
+        parser.add_argument("-s", "--schema", dest="xsdfile", required=True, 
+                            help="select the xsd used to generate xml")
+        parser.add_argument("-e", "--element", dest="element", required=True,
+                            help="select an element to dump xml")
+        parser.add_argument("-c", "--choice",
+                            action="store_true", dest="enable_choice", default=False,
+                            help="enable the <choice> mode")
+        args = parser.parse_args()
+
+        generator = GenXML(args.xsdfile, args.element, args.enable_choice)
     generator.run()
 
 
@@ -242,4 +284,3 @@ if __name__ == "__main__":
     main()
     
     
-
