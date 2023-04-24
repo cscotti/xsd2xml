@@ -1,92 +1,54 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="root">
-    <xs:complexType>
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="root" type="complexType.root"/>
+  <xs:complexType name="complexType.root">
+    <xs:choice>
       <xs:sequence>
-        <xs:element name="thirdoperator">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="instance" maxOccurs="unbounded" minOccurs="0">
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute type="xs:anyURI" name="url" use="optional"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-            <xs:attribute type="xs:byte" name="id"/>
-            <xs:attribute type="xs:string" name="elementtype"/>
-            <xs:attribute type="xs:string" name="restype"/>
-            <xs:attribute type="xs:string" name="vendor"/>
-            <xs:attribute type="xs:string" name="clientid"/>
-            <xs:attribute type="xs:string" name="clientpwd"/>
-            <xs:attribute type="xs:string" name="concurrency"/>
-            <xs:attribute type="xs:string" name="maxcount"/>
-            <xs:attribute type="xs:string" name="timeout"/>
-            <xs:attribute type="xs:string" name="balancetype"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="ctroperator">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="image">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="env" maxOccurs="unbounded" minOccurs="0">
-                      <xs:complexType>
-                        <xs:simpleContent>
-                          <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="key" use="optional"/>
-                            <xs:attribute type="xs:string" name="value" use="optional"/>
-                          </xs:extension>
-                        </xs:simpleContent>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="expose">
-                      <xs:complexType>
-                        <xs:simpleContent>
-                          <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="port"/>
-                          </xs:extension>
-                        </xs:simpleContent>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="mount">
-                      <xs:complexType>
-                        <xs:simpleContent>
-                          <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="from"/>
-                            <xs:attribute type="xs:string" name="to"/>
-                          </xs:extension>
-                        </xs:simpleContent>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute type="xs:string" name="name"/>
-                  <xs:attribute type="xs:string" name="address"/>
-                  <xs:attribute type="xs:string" name="version"/>
-                  <xs:attribute type="xs:string" name="command"/>
-                  <xs:attribute type="xs:string" name="commandargs"/>
-                  <xs:attribute type="xs:string" name="cpu"/>
-                  <xs:attribute type="xs:string" name="memory"/>
-                  <xs:attribute type="xs:string" name="nvgpu"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-            <xs:attribute type="xs:byte" name="id"/>
-            <xs:attribute type="xs:string" name="elementtype"/>
-            <xs:attribute type="xs:string" name="restype"/>
-            <xs:attribute type="xs:string" name="vendor"/>
-            <xs:attribute type="xs:string" name="authurl"/>
-            <xs:attribute type="xs:string" name="concurrency"/>
-            <xs:attribute type="xs:string" name="maxcount"/>
-            <xs:attribute type="xs:string" name="timeout"/>
-            <xs:attribute type="xs:string" name="prototype"/>
-            <xs:attribute type="xs:string" name="probe"/>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="empno" type="xs:string"/>
+        <xs:element name="designation" type="xs:string"/>
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="age" type="xs:unsignedByte"/>
+      </xs:sequence>
+      <xs:element name="sku" type="simpleType.SKU"/>
+      <xs:element name="ppk" type="xs:integer"/>
+      <xs:element name="alo" type="xs:date"/>
+      <xs:element name="shoesize">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:integer">
+              <xs:attribute name="country" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="jeans_size">
+        <xs:simpleType>
+          <xs:union memberTypes="sizebyno sizebystring"/>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="intvalues" type="valuelist"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="simpleType.SKU">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d{3}\w{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sizebyno">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:maxInclusive value="42"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sizebystring">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="small"/>
+      <xs:enumeration value="medium"/>
+      <xs:enumeration value="large"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="valuelist">
+    <xs:list itemType="xs:integer"/>
+  </xs:simpleType>
 </xs:schema>
