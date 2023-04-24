@@ -1,0 +1,92 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="operatorset">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="thirdoperator">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="instance" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:anyURI" name="url" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:byte" name="id"/>
+            <xs:attribute type="xs:string" name="elementtype"/>
+            <xs:attribute type="xs:string" name="restype"/>
+            <xs:attribute type="xs:string" name="vendor"/>
+            <xs:attribute type="xs:string" name="clientid"/>
+            <xs:attribute type="xs:string" name="clientpwd"/>
+            <xs:attribute type="xs:string" name="concurrency"/>
+            <xs:attribute type="xs:string" name="maxcount"/>
+            <xs:attribute type="xs:string" name="timeout"/>
+            <xs:attribute type="xs:string" name="balancetype"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ctroperator">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="image">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="env" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="key" use="optional"/>
+                            <xs:attribute type="xs:string" name="value" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="expose">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="port"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="mount">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="from"/>
+                            <xs:attribute type="xs:string" name="to"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="name"/>
+                  <xs:attribute type="xs:string" name="address"/>
+                  <xs:attribute type="xs:string" name="version"/>
+                  <xs:attribute type="xs:string" name="command"/>
+                  <xs:attribute type="xs:string" name="commandargs"/>
+                  <xs:attribute type="xs:string" name="cpu"/>
+                  <xs:attribute type="xs:string" name="memory"/>
+                  <xs:attribute type="xs:string" name="nvgpu"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:byte" name="id"/>
+            <xs:attribute type="xs:string" name="elementtype"/>
+            <xs:attribute type="xs:string" name="restype"/>
+            <xs:attribute type="xs:string" name="vendor"/>
+            <xs:attribute type="xs:string" name="authurl"/>
+            <xs:attribute type="xs:string" name="concurrency"/>
+            <xs:attribute type="xs:string" name="maxcount"/>
+            <xs:attribute type="xs:string" name="timeout"/>
+            <xs:attribute type="xs:string" name="prototype"/>
+            <xs:attribute type="xs:string" name="probe"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
