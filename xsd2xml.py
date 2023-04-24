@@ -69,6 +69,7 @@ def valsmap(v):
     v['base64Binary'] = '0fb8'
     v['anyURI'] = 'http://miaozn.github.io/misc'
     v['notation'] = 'asd'
+    v['simpleType.SKU'] = 'test-sku'
 
 
 
@@ -216,21 +217,21 @@ class GenXML:
                     
         elif isinstance(node.type, XsdAtomicBuiltin):
             n = self.use_short_ns(node.name)
-            tp = str(node.type)
+            tp = str(node.type.local_name)
             print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
         elif isinstance(node.type, XsdSimpleType):
             n = self.use_short_ns(node.name)
             if isinstance(node.type, XsdList):
                 print('<!--simpletype: list-->')
-                tp = str(node.type.item_type)
+                tp = str(node.type.item_type.local_name)
                 print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
             elif isinstance(node.type, XsdUnion):
                 print('<!--simpletype: union.-->')
                 print('<!--default: using the 1st type-->')
-                tp = str(node.type.member_types[0].base_type)
+                tp = str(node.type.member_types[0].base_type.local_name)
                 print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
             else:
-                tp = str(node.type.base_type)
+                tp = str(node.type.local_name)
                 print(self.start_tag(n) + self.genval(tp) + self.end_tag(n))
         else:
             print('ERROR: unknown type: ' + node.type)
@@ -241,6 +242,7 @@ class GenXML:
         valsmap(self.vals)
         self.print_header()
         self.node2xml(self.xsd.elements[self.elem])
+
 
 
 ##############
